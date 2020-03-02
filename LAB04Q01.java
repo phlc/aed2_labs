@@ -37,7 +37,7 @@ public class LAB04Q01{
 		
 		int c = 0; //controle
 
-		for (int i=0; i<s.length()&&c>0; i++){
+		for (int i=0; i<s.length()&&c>=0; i++){
 			if(s.charAt(i)=='(')
 				c++;
 			if(s.charAt(i)==')')
