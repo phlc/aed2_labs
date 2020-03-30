@@ -9,17 +9,17 @@ import java.util.Scanner;
 
 class Celula{
 	public Celula ant;
-	public int elemento;
+	public String elemento;
 	public Celula prox;
 
-	public Celula (int x){
+	public Celula (String s){
 		this.ant = null;
-		this.elemento = x;
+		this.elemento = s;
 		this.prox = null;
 	}
 		
 	public Celula (){
-		this(0);
+		this("");
 	}
 
 }
@@ -32,8 +32,8 @@ class Lista{
 		this.ultimo = this.primeiro;
 	}
 
-	public void inserirInicio(int x){
-		Celula tmp = new Celula(x);
+	public void inserirInicio(String s){
+		Celula tmp = new Celula(s);
 		tmp.ant=primeiro;
 		tmp.prox=primeiro.prox;
 		primeiro.prox=tmp;
@@ -44,8 +44,8 @@ class Lista{
 		tmp=null;
 	}
 	
-	public void inserirFim(int x){
-		ultimo.prox = new Celula(x);
+	public void inserirFim(String s){
+		ultimo.prox = new Celula(s);
 		ultimo.prox.ant=ultimo;
 		ultimo=ultimo.prox;
 	}
@@ -59,14 +59,14 @@ class Lista{
 
 	}
 
-	public void inserirPos(int x, int pos) throws Exception{
+	public void inserirPos(String s, int pos) throws Exception{
 		int tamanho = this.tamanho();
 		if (pos < 0 || pos > tamanho)
 			throw new Exception("Posicao Inexistente");
 		else if (pos==0)
-			inserirInicio(x);
+			inserirInicio(s);
 		else if (pos==tamanho)
-			inserirFim(x);
+			inserirFim(s);
 		else{
 
 			Celula i = primeiro;
@@ -74,7 +74,7 @@ class Lista{
 				i=i.prox;
 			}
 
-			Celula tmp = new Celula(x);
+			Celula tmp = new Celula(s);
 		
 			tmp.ant=i;
 			tmp.prox=i.prox;
@@ -86,22 +86,22 @@ class Lista{
 	}
 
 
-	public int removerInicio() throws Exception{
+	public String removerInicio() throws Exception{
 		if (primeiro == ultimo)
 			throw new Exception("Lista Vazia");
 		Celula tmp  = primeiro;
 		primeiro = primeiro.prox;
-		int resp = primeiro.elemento;
+		String resp = primeiro.elemento;
 		primeiro.ant=null;
 		tmp.prox=null;
 		tmp=null;
 		return resp;
 	}
 
-	public int removerFim() throws Exception{
+	public String removerFim() throws Exception{
 		if (primeiro == ultimo)
 			throw new Exception("Lista Vazia");
-		int resp = ultimo.elemento;
+		String resp = ultimo.elemento;
 		ultimo=ultimo.ant;
 		ultimo.prox.ant=null;
 		ultimo.prox=null;
@@ -109,8 +109,8 @@ class Lista{
 	}
 
 
-	public int removerPos(int pos) throws Exception{
-		int resp;
+	public String removerPos(int pos) throws Exception{
+		String resp;
 		int tamanho=this.tamanho();
 		if (pos<0 || pos>tamanho-1)
 			throw new Exception("Posicao Inexistente");
@@ -135,11 +135,11 @@ class Lista{
 
 	public void ordenarInsercao(){
 		for (Celula i=primeiro.prox.prox; i!=null; i=i.prox){
-			int tmp = i.elemento;
+			String tmp = i.elemento;
 			
 			Celula j=i.ant;
 
-			while(j!=primeiro && j.elemento>tmp){
+			while(j!=primeiro && j.elemento.compareTo(tmp)>0){
 				j.prox.elemento=j.elemento;
 				j=j.ant;
 			}
@@ -148,17 +148,18 @@ class Lista{
 
 	}
 
-	public int mostrar(int pos) throws Exception{
-		int resp;
-		int tamanho=this.tamanho();
-		if (pos<0 || pos>tamanho-1)
-			throw new Exception ("Posicao Inexistente");
-		Celula i=primeiro.prox;
+	public int economia() throws Exception{
+		int resp = 0;
 
-		for (int j=0; j<pos; j++){
-			i=i.prox;
-		}
-		return i.elemento;
+		for (Celula i=primeiro.prox; i.prox!=null; i=i.prox){
+			for(int j=0; j<i.elemento.length(); j++){
+				if(i.elemento.charAt(j)==i.prox.elemento.charAt(j))
+					resp++;
+				else
+					j=i.elemento.length();
+			}	
+		}	
+		return resp;
 	}
 }
 
@@ -168,29 +169,17 @@ public class LAB06Q01{
 		Scanner leitor = new Scanner(System.in);
 	
 		while (leitor.hasNext()){
-			int qnt = leitor.nextInt();
+			int qnt = Integer.parseInt(leitor.nextLine());
 			Lista l = new Lista();
-			int tel = 0;
-			int eco = 0;
+			String tel;
 			for (int i=0; i<qnt; i++){
-				tel = leitor.nextInt();
+				tel = leitor.nextLine();
 				l.inserirFim(tel);
 			}
 			
 			l.ordenarInsercao();
-				
-			for(int i=1; i<qnt; i++){
-				String str1="";
-				String str2="";
-			
-				str1=str1+l.mostrar(i-1);
-				str2=str2+l.mostrar(i);	
-				for (int j=0; j<str1.length()-1 && j<str2.length()-1 
-					      && str1.charAt(j)==str2.charAt(j); j++){
-					eco++;
-				}			
-			}
-			System.out.println(eco);
-		}		
+			System.out.println(l.economia());
+		}
+		leitor.close();		
 	}
 }
