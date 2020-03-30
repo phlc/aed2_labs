@@ -1,3 +1,10 @@
+/*
+Algoritmos e Estrutura de Dados 2 - Pucminas
+Pedro Henrique Lima Carvalho
+Mat: 651230
+Turno:Tarde
+*/
+
 class Celula{
 	public int elemento;
 	public Celula prox;
